@@ -1,0 +1,121 @@
+import { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { usePosts } from "../context/PostsContext";
+import { useNavigate } from "react-router-dom";
+
+export default function CreatePost() {
+  const { user, token } = useAuth();
+  const { addPost } = usePosts();
+  const navigate = useNavigate();
+
+  // debug: confirm addPost exists
+  // console.log("CreatePost: addPost type =", typeof addPost);
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      setMessage("You must be logged in to create a post!");
+      return;
+    }
+    if (!title.trim() || !content.trim()) {
+      setMessage("Title and content required.");
+      return;
+    }
+    if (imageUrl.trim() && !isValidUrl(imageUrl.trim())) {
+      setMessage("Invalid image URL.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/posts",
+        {
+          userId: user.id,
+          title: title.trim(),
+          content: content.trim(),
+          imageUrl: imageUrl.trim() || null,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // add to context so Home updates immediately
+      if (typeof addPost === "function") {
+        addPost(res.data);
+      } else {
+        console.warn("addPost not available from usePosts()");
+      }
+
+      setMessage("Post created successfully!");
+      setTitle("");
+      setContent("");
+      setImageUrl("");
+
+      // Optionally navigate to home or the new post detail
+      // navigate("/");
+      // OR navigate to the new post:
+      navigate(`/posts/${res.data.id}`);
+    } catch (err) {
+      console.error("Create post error:", err);
+      setMessage("Failed to create post.");
+      console.error("Create post error:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <h2 className="text-2xl font-bold mb-4">Create a Post</h2>
+      {message && <p className="mb-4 text-red-500">{message}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full border rounded px-4 py-2"
+        />
+        <textarea
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="w-full border rounded px-4 py-2"
+        />
+        <input
+          type="text"
+          placeholder="Image URL (optional)"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="w-full border rounded px-4 py-2"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-indigo-600 text-white px-6 py-2 rounded-full"
+        >
+          {loading ? "Creating..." : "Create Post"}
+        </button>
+      </form>
+    </div>
+  );
+}
