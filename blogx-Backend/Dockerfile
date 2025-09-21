@@ -5,23 +5,22 @@ WORKDIR /app
 # Copy Gradle files
 COPY build.gradle .
 COPY settings.gradle .
-# Agar tu Gradle Kotlin DSL use karta hai to ye bhi:
-# COPY build.gradle.kts .
-# COPY settings.gradle.kts .
 
-# Copy source code
+# Copy source
 COPY src ./src
 
-# Build jar
+# Build JAR (skip tests for faster build)
 RUN gradle clean build -x test
 
-# Stage 2: Run with Microsoft OpenJDK
-FROM mcr.microsoft.com/openjdk/jdk:17-ubuntu
+# Stage 2: Run with lightweight JRE
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy jar from build stage
+# Copy JAR from build stage
 COPY --from=build /app/build/libs/*.jar app.jar
 
+# Expose port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
 
+# Run the app
+ENTRYPOINT ["java", "-jar", "app.jar"]
