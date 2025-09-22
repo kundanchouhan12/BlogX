@@ -10,12 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    // 🔹 CORS URLs from properties
-    @Value("${backend.url}")
-    private String backendUrl;
-
-    @Value("${frontend.url}")
+    @Value("${FRONTEND_URL:http://localhost:5173}")
     private String frontendUrl;
+
+    @Value("${BACKEND_URL:http://localhost:8080}")
+    private String backendUrl;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -23,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(frontendUrl) // ✅ Pass as String[] automatically
+                        .allowedOrigins(frontendUrl, backendUrl) // ✅ multiple origins
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
@@ -31,7 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
         };
     }
 
-    // 🔹 Static resource mapping for uploads
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")

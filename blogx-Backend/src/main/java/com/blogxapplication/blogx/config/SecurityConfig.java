@@ -2,6 +2,7 @@ package com.blogxapplication.blogx.config;
 
 import com.blogxapplication.blogx.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,36 +34,18 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("http://localhost:5173"); // React frontend
+                    config.addAllowedOriginPattern("*"); // ✅ allow all origins (or use frontendUrl, backendUrl)
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
-                        .requestMatchers("/api/auth/**", "/login.html", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ allow preflight
-
-                        // Secured endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/posts", "/api/posts/**").authenticated()  // ✅ exact + /**
-                        .requestMatchers(HttpMethod.PUT, "/api/posts/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/comments/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/comments", "/api/comments/**").authenticated()
-                        .requestMatchers("/api/users/**").authenticated()
-
-                        // Swagger public
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-
-                        // Any other requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
-
-
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -93,7 +76,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

@@ -2,6 +2,7 @@ package com.blogxapplication.blogx.security;
 
 import com.blogxapplication.blogx.entity.User;
 import com.blogxapplication.blogx.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + nameOrEmail));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getName(),  // JWT me username jayega
+                user.getEmail(),   // ✅ email as username
                 user.getPassword(),
-                java.util.Collections.emptyList()
+                java.util.Collections.emptyList()  // ✅ no roles yet
         );
     }
 }
