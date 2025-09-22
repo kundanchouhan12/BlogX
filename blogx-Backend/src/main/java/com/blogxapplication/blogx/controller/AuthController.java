@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://blogx-backendwebservice-latest.onrender.com")
 @RequestMapping("/api/auth")
 public class AuthController {
 
