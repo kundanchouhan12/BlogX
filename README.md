@@ -1,8 +1,8 @@
-Perfect! Mai aapke README.md me live demo link add kar deta hoon aur thoda aur polished bana deta hoon:
 
 # BlogX
-
-BlogX is a modern blogging platform that allows users to create, manage, and interact with blog posts. The project features a React frontend with a Spring Boot backend, complete with JWT-based authentication, rich text editing, and image handling.
+BlogX is a modern blogging platform that allows users to create, manage, and interact with blog posts.
+The project features a React frontend with a Spring Boot backend, complete with JWT-based authentication,
+rich text editing, and image handling.
 
 ---
 
