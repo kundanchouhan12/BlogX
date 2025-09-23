@@ -14,7 +14,6 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173") // ✅ frontend se call allow
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
