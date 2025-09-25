@@ -51,7 +51,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto dto, String username) {
-        // User find by username from JWT
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
@@ -63,16 +62,15 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
         comment.setContent(dto.getContent());
 
+        // ✅ Parent comment check
+        if (dto.getParentId() != null) {
+            Comment parent = commentRepository.findById(dto.getParentId())
+                    .orElseThrow(() -> new RuntimeException("Parent comment not found: " + dto.getParentId()));
+            comment.setParent(parent);
+        }
+
         Comment saved = commentRepository.save(comment);
-
-        CommentResponseDto res = new CommentResponseDto();
-        res.setId(saved.getId());
-        res.setContent(saved.getContent());
-        res.setUsername(user.getName());
-        res.setPostId(post.getId());
-        res.setPostTitle(post.getTitle());
-
-        return res;
+        return mapToDto(saved);
     }
 
 
@@ -111,7 +109,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-
     @Override
     @Transactional
     public void deleteAllComments() {
@@ -141,6 +138,15 @@ public class CommentServiceImpl implements CommentService {
         dto.setPostId(comment.getPost().getId());
         dto.setUsername(comment.getUser().getName());
         dto.setPostTitle(comment.getPost().getTitle());
+        dto.setParentId(comment.getParent() != null ? comment.getParent().getId() : null);
+
+        // ✅ nested replies map karo
+        if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+            dto.setReplies(comment.getReplies().stream()
+                    .map(this::mapToDto)
+                    .collect(Collectors.toList()));
+        }
+
         return dto;
     }
 }

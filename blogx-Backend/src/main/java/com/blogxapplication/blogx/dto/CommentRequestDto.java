@@ -9,4 +9,5 @@ public class CommentRequestDto {
     private Long userId;
     private Long postId;
     private String content;
+    private Long parentId; // ✅ reply ke liye optional
 }
