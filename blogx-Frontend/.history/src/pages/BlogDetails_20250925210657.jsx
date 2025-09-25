@@ -86,7 +86,7 @@ const BlogDetails = () => {
     }
   };
 
-  // Delete comment recursively
+  // Delete comment (recursive)
   const handleDeleteComment = async (commentId) => {
     try {
       await axios.delete(`${API_URL}/api/comments/${commentId}`, {
@@ -153,7 +153,7 @@ const BlogDetails = () => {
   // Recursive render comments
   const renderComments = (list, level = 0) =>
     list.map((comment) => (
-      <div key={comment.id} className="comment-card" style={{ marginLeft: level * 20 }}>
+      <div key={comment.id} style={{ marginLeft: level * 20, marginTop: 8 }}>
         <div className="flex justify-between items-start">
           <p>
             <b>{comment.username}</b>:{" "}
@@ -161,15 +161,17 @@ const BlogDetails = () => {
               <input
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                className="border p-1 rounded w-full"
+                className="border p-1 rounded"
               />
             ) : (
               comment.content
             )}
           </p>
-          <div className="comment-actions flex gap-2">
+          <div className="flex gap-2">
             {comment.username === user?.name && editingCommentId !== comment.id && (
-              <button onClick={() => { setEditingCommentId(comment.id); setEditText(comment.content); }}>Edit</button>
+              <button onClick={() => { setEditingCommentId(comment.id); setEditText(comment.content); }}>
+                Edit
+              </button>
             )}
             {editingCommentId === comment.id && (
               <>
@@ -182,8 +184,10 @@ const BlogDetails = () => {
             )}
             {token && (
               <button
-                onClick={() => { setReplyTo(comment.id); setReplyContent(`@${comment.username} `); }}
-                className="reply-button"
+                onClick={() => {
+                  setReplyTo(comment.id);
+                  setReplyContent(`@${comment.username} `);
+                }}
               >
                 Reply
               </button>
@@ -194,7 +198,10 @@ const BlogDetails = () => {
         {/* Reply form */}
         {replyTo === comment.id && (
           <form
-            onSubmit={(e) => { e.preventDefault(); handleAddReply(comment.id); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAddReply(comment.id);
+            }}
             style={{ marginLeft: 20, marginTop: 4 }}
           >
             <input
@@ -203,17 +210,19 @@ const BlogDetails = () => {
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder={`Replying to ${comment.username}`}
               autoFocus
-              className="border p-1 rounded w-full"
+              className="border p-1 rounded"
             />
-            <button type="submit" className="ml-2 bg-indigo-500 text-white px-3 rounded">Reply</button>
+            <button type="submit" className="ml-2">Reply</button>
           </form>
         )}
 
         {/* Nested replies */}
         {comment.replies && comment.replies.length > 0 && (
-          <div className="comment-reply">
+          <div style={{ marginLeft: 20 }}>
             <button onClick={() => toggleReplies(comment.id)} className="text-sm text-gray-500">
-              {expandedComments[comment.id] ? "Hide Replies" : `View ${comment.replies.length} Replies`}
+              {expandedComments[comment.id]
+                ? "Hide Replies"
+                : `View ${comment.replies.length} Replies`}
             </button>
             {expandedComments[comment.id] && renderComments(comment.replies, level + 1)}
           </div>
@@ -240,15 +249,15 @@ const BlogDetails = () => {
         />
         {isAuthor && (
           <div className="post-actions-premium">
-            <button className="edit-premium" onClick={() => navigate(`/update-post/${post.id}`)}>✏️ Edit Post</button>
-            <button className="delete-premium" onClick={handleDeletePost}>🗑️ Delete Post</button>
+            <button onClick={() => navigate(`/update-post/${post.id}`)}>✏️ Edit Post</button>
+            <button onClick={handleDeletePost}>🗑️ Delete Post</button>
           </div>
         )}
       </div>
 
       {/* Add top-level comment */}
       {token ? (
-        <form onSubmit={handleAddComment} className="mt-4 flex gap-2 comment-form">
+        <form onSubmit={handleAddComment} className="mt-4 flex gap-2">
           <input
             type="text"
             value={commentText}
@@ -256,13 +265,13 @@ const BlogDetails = () => {
             placeholder="Add a comment..."
             className="flex-1 border p-2 rounded"
           />
-          <button type="submit" className="primary">Post</button>
+          <button type="submit" className="bg-indigo-500 text-white px-4 rounded">Post</button>
         </form>
       ) : (
         <p className="mt-4">Login to comment.</p>
       )}
 
-      {/* Render comments */}
+      {/* Comments */}
       <div className="mt-4">{post.comments && renderComments(post.comments)}</div>
     </div>
   );

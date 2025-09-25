@@ -8,8 +8,9 @@ export default function Comments({ postId }) {
   const [newComment, setNewComment] = useState("");
   const [replyTo, setReplyTo] = useState(null);
   const [replyContent, setReplyContent] = useState("");
-  const [expandedComments, setExpandedComments] = useState({});
+  const [expandedComments, setExpandedComments] = useState({}); // ✅ track collapsed/expanded replies
 
+  // Fetch comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -22,6 +23,7 @@ export default function Comments({ postId }) {
     fetchComments();
   }, [postId, API_URL]);
 
+  // Add comment
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
@@ -40,6 +42,7 @@ export default function Comments({ postId }) {
     }
   };
 
+  // Add reply
   const handleAddReply = async (e, parentId, parentUsername) => {
     e.preventDefault();
     if (!replyContent.trim()) return;
@@ -67,6 +70,7 @@ export default function Comments({ postId }) {
     }
   };
 
+  // Delete comment
   const handleDelete = async (commentId) => {
     try {
       await axios.delete(`${API_URL}/api/comments/${commentId}`, {
@@ -92,6 +96,7 @@ export default function Comments({ postId }) {
     }
   };
 
+  // Toggle reply collapse
   const toggleReplies = (commentId) => {
     setExpandedComments((prev) => ({
       ...prev,
@@ -99,17 +104,19 @@ export default function Comments({ postId }) {
     }));
   };
 
+  // Recursive render
   const renderComments = (list, level = 0) =>
     list.map((comment) => (
       <div
         key={comment.id}
-        className={`bg-gray-50 p-4 rounded-lg shadow-sm border ${level > 0 ? "ml-6 mt-2" : "mt-4"}`}
+        className="mt-2"
+        style={{ marginLeft: level * 20 }}
       >
         <div className="flex justify-between items-start">
-          <p className="text-gray-700">
-            <span className="font-semibold text-indigo-600">{comment.username}</span>: {comment.content}
+          <p>
+            <b>{comment.username}</b>: {comment.content}
           </p>
-          <div className="flex gap-3 text-sm">
+          <div className="flex gap-2">
             {comment.username === user?.name && (
               <button
                 onClick={() => handleDelete(comment.id)}
@@ -124,7 +131,7 @@ export default function Comments({ postId }) {
                   setReplyTo(comment.id);
                   setReplyContent(`@${comment.username} `);
                 }}
-                className="text-indigo-500 hover:underline"
+                className="text-blue-500 hover:underline"
               >
                 Reply
               </button>
@@ -132,30 +139,32 @@ export default function Comments({ postId }) {
           </div>
         </div>
 
+        {/* Reply form */}
         {replyTo === comment.id && (
           <form
             onSubmit={(e) => handleAddReply(e, comment.id, comment.username)}
-            className="flex gap-2 mt-3"
+            className="flex gap-2 mt-2 ml-6"
           >
             <input
               type="text"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder={`Replying to ${comment.username}...`}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="flex-1 border rounded p-2"
               autoFocus
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition"
+              className="bg-indigo-500 text-white px-4 py-2 rounded"
             >
               Reply
             </button>
           </form>
         )}
 
+        {/* Replies toggle */}
         {comment.replies && comment.replies.length > 0 && (
-          <div className="mt-2">
+          <div className="ml-6 mt-1">
             <button
               onClick={() => toggleReplies(comment.id)}
               className="text-sm text-gray-500 hover:underline"
@@ -173,33 +182,30 @@ export default function Comments({ postId }) {
     ));
 
   return (
-    <div className="mt-6">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Comments</h3>
+    <div className="mt-4">
+      <h3 className="text-lg font-semibold mb-2">Comments</h3>
 
-      <form
-        onSubmit={handleAddComment}
-        className="flex items-center gap-3 mb-6 bg-white p-4 rounded-lg shadow-sm border"
-      >
+      {/* Main comment form */}
+      <form onSubmit={handleAddComment} className="flex gap-2 mb-4">
         <input
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder={token ? "Write your comment..." : "Login to comment"}
+          placeholder={token ? "Add a comment..." : "Login to comment"}
           disabled={!token}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+          className="flex-1 border rounded p-2"
         />
         <button
           type="submit"
           disabled={!token}
-          className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
+          className="bg-indigo-500 text-white px-4 py-2 rounded disabled:opacity-50"
         >
           Post
         </button>
       </form>
 
-      <div className="space-y-4">
-        {renderComments(comments)}
-      </div>
+      {/* Render comments */}
+      {renderComments(comments)}
     </div>
   );
 }

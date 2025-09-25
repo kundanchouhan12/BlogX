@@ -1,0 +1,308 @@
+/* User-provided premium styles merged and organized */
+
+/* Container tweaks */
+.blog-details-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #0f172a;
+  background: linear-gradient(180deg, #fbfbff 0%, #ffffff 100%);
+}
+
+/* Fixed Back button */
+.back-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: #4f46e5;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.back-button:hover {
+  background-color: #4338ca;
+  transform: translateY(-2px);
+}
+
+.back-button:focus {
+  outline: 2px solid #c7d2fe;
+  outline-offset: 2px;
+}
+
+/* Post card */
+.post-card {
+  background: #fff;
+  padding: 1.5rem;
+  margin-top: 4rem; /* give room for fixed back-button */
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
+}
+
+.post-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.post-author {
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+.post-content {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #374151;
+}
+
+.comments-section {
+  margin-top: 2rem;
+}
+
+/* Post actions premium */
+.post-actions-premium {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-premium {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.edit-premium {
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.edit-premium:hover {
+  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  transform: translateY(-2px);
+}
+
+.delete-premium {
+  background: linear-gradient(to right, #ef4444, #f43f5e);
+  color: white;
+}
+
+.delete-premium:hover {
+  background: linear-gradient(to right, #dc2626, #e11d48);
+  transform: translateY(-2px);
+}
+
+/* Form & buttons */
+.comment-form,
+.edit-form {
+  margin-bottom: 1rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #e6e9f2;
+  margin-bottom: 0.5rem;
+  resize: vertical;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-weight: 600;
+}
+
+.btn.primary {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.btn.success {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+.btn.cancel {
+  background-color: #6b7280;
+  color: #fff;
+}
+
+.btn.edit {
+  background-color: #f59e0b;
+  color: #000;
+}
+
+.btn.delete {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Comment card */
+.comment-card {
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(2, 6, 23, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.comment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+}
+
+.comment-avatar {
+  box-shadow: 0 2px 6px rgba(2, 6, 23, 0.06);
+}
+
+/* Comment meta & actions */
+.comment-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.icon-btn:hover {
+  background: rgba(15, 23, 42, 0.03);
+  color: #111827;
+}
+
+.action-like,
+.action-reply {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #eef2ff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 13px;
+}
+
+.action-like span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.action-reply {
+  border: 1px solid #e6e9f2;
+}
+
+/* Reply form and toggle */
+.reply-toggle {
+  color: #6b7280;
+  font-size: 13px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.reply-toggle:hover {
+  color: #374151;
+}
+
+/* Replies list indentation */
+.replies-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(229, 231, 235, 0.7);
+}
+
+/* Feedback states */
+.loader,
+.error,
+.no-comments,
+.login-warning {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 2rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .post-card {
+    margin-top: 6rem;
+    padding: 1rem;
+  }
+
+  .back-button {
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .post-actions-premium {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-premium {
+    width: 100%;
+  }
+}
